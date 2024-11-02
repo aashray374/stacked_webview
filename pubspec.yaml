@@ -1,7 +1,7 @@
 name: stacked_webview
 description: "A new Flutter package project."
 version: 0.0.1
-homepage:
+homepage: https://github.com/aashray374/stacked_webview
 
 environment:
   sdk: ^3.5.4
