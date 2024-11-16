@@ -29,9 +29,9 @@ class _StackedWebviewState extends State<StackedWebview> {
       NavigationDelegate(
         onPageStarted: (String url) {
           if (Uri.parse(url).isAbsolute) {
-
-            if(urlStack.length>1){
-              if(urlStack[urlStack.length-1]==urlStack[urlStack.length-2]){
+            if (urlStack.length > 1) {
+              if (urlStack[urlStack.length - 1] ==
+                  urlStack[urlStack.length - 2]) {
                 urlStack.removeLast();
               }
             }
@@ -55,11 +55,10 @@ class _StackedWebviewState extends State<StackedWebview> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: _handleBackNavigation,
-      child: Scaffold(
-        appBar: widget.appbar,
-        body: WebViewWidget(controller: widget.controller),
-      )
-    );
+        onPopInvokedWithResult: _handleBackNavigation,
+        child: Scaffold(
+          appBar: widget.appbar,
+          body: WebViewWidget(controller: widget.controller),
+        ));
   }
 }
