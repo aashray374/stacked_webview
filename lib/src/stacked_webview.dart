@@ -29,6 +29,13 @@ class _StackedWebviewState extends State<StackedWebview> {
       NavigationDelegate(
         onPageStarted: (String url) {
           if (Uri.parse(url).isAbsolute) {
+
+            if(urlStack.length>1){
+              if(urlStack[urlStack.length-1]==urlStack[urlStack.length-2]){
+                urlStack.removeLast();
+              }
+            }
+
             urlStack.add(url);
           }
         },

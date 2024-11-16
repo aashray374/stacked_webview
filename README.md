@@ -25,7 +25,7 @@ Add `stacked_webview` as a dependency in your `pubspec.yaml` file:
 
 ```ymal
 dependencies:
-  stacked_webview: ^1.0.0
+  stacked_webview: ^1.0.1
 ```
 then run flutter pub get
 
@@ -82,6 +82,7 @@ class _MyWebViewScreenState extends State<MyWebViewScreen> {
 ### Parameters
 controller (required): An instance of WebViewController for managing web view state.
 initialUrl (required): The initial URL to load in the WebView.
+appbar : You can give a custom appbar if you want to show above your webview
 
 ## Additional information
 
