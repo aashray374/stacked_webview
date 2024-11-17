@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class StackedWebview extends StatefulWidget {
-  final WebViewController controller;
   final String initialUrl;
   final AppBar? appbar;
 
   const StackedWebview({
     super.key,
-    required this.controller,
     required this.initialUrl,
     this.appbar,
   });
@@ -19,46 +17,61 @@ class StackedWebview extends StatefulWidget {
 
 class _StackedWebviewState extends State<StackedWebview> {
   final List<String> urlStack = [];
+  late WebViewController newController;
 
   @override
   void initState() {
     super.initState();
-    urlStack.add(widget.initialUrl);
 
-    widget.controller.setNavigationDelegate(
-      NavigationDelegate(
-        onPageStarted: (String url) {
-          if (Uri.parse(url).isAbsolute) {
-            if (urlStack.length > 1) {
-              if (urlStack[urlStack.length - 1] ==
-                  urlStack[urlStack.length - 2]) {
-                urlStack.removeLast();
-              }
+    // Initialize the new controller
+    newController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            // Add the URL to the stack if it's not already the last one
+            if (urlStack.isEmpty || urlStack.last != url) {
+              setState(() {
+                urlStack.add(url);
+              });
+              debugPrint("URL added to stack: $url");
             }
-
-            urlStack.add(url);
-          }
-        },
-      ),
-    );
-
-    widget.controller.loadRequest(Uri.parse(widget.initialUrl));
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.initialUrl));
   }
 
-  void _handleBackNavigation(bool didPop, Object? result) {
+  Future<void> _handleBackNavigation() async {
     if (urlStack.length > 1) {
-      urlStack.removeLast();
-      widget.controller.loadRequest(Uri.parse(urlStack.last));
+      // Remove the current URL
+      setState(() {
+        urlStack.removeLast();
+      });
+
+      // Load the previous URL
+      final previousUrl = urlStack.last;
+      await newController.loadRequest(Uri.parse(previousUrl));
+    } else {
+      // Close the app if there are no more URLs to navigate back to
+      Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        onPopInvokedWithResult: _handleBackNavigation,
-        child: Scaffold(
-          appBar: widget.appbar,
-          body: WebViewWidget(controller: widget.controller),
-        ));
+    return WillPopScope(
+      onWillPop: () async {
+        if (urlStack.length > 1) {
+          _handleBackNavigation();
+          return false; // Prevent default back navigation
+        }
+        return true; // Allow app to exit
+      },
+      child: Scaffold(
+        appBar: widget.appbar,
+        body: WebViewWidget(controller: newController),
+      ),
+    );
   }
 }

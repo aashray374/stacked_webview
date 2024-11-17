@@ -11,3 +11,8 @@
 ### Added
 - added proper back navigation made from ui
  
+
+ ## 2.0.0
+
+ ### Fixed
+ - There was a bug which forced the same url into the history multiple times upon reload which was fixed.
