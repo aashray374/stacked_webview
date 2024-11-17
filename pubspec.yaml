@@ -1,6 +1,6 @@
 name: stacked_webview
 description: "A Flutter package that provides a WebView with custom back navigation."
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/aashray374/stacked_webview
 
 environment:
